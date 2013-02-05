@@ -25,7 +25,7 @@
 
 from xmlrpclib import ServerProxy, Error
 import socket,sys,time
-import pylab as pl
+import matplotlib.pyplot as plt
 import numpy as np
 
 # Open a connection to the fldigi XMLRPC server
@@ -42,10 +42,14 @@ except socket.error as v:
 
 data = []
 # Setup plot
-pl.ion()
-fig = pl.figure()
+plt.ion()
+fig = plt.figure()
 ax = fig.add_subplot(1,1,1)
 
+
+#Set up inital plot
+current_quality = fldigi.modem.get_quality()
+line, = plt.plot(current_quality)
 
 # Plot as fast as we can
 while True:
@@ -59,10 +63,9 @@ while True:
 	xscale = np.arange(len(data))
 	
 	# Clear and re-plot
-	ax.clear()
-	ax.plot(xscale,data)
-	ax.axis([0,100,0,100])
-	pl.draw()
+	line.set_data(xscale, data)
+#	ax.axis([0,100,0,100])
+	plt.draw()
 
 
 
