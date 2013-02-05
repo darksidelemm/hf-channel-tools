@@ -44,22 +44,27 @@ except socket.error as v:
 # Setup plot
 fig = plt.figure()
 ax = fig.add_subplot(1,1,1)
-
-data = []
-
 line, = plt.plot([], [], 'r-')
 
 
+data = []
+
 def draw_new_data(i, data, line, *args):
+    # Read data from fldigi
     current_quality = fldigi.modem.get_quality()
     data.append(current_quality)
-    #Trim to 100 elements    
+    
+    # Trim to 100 elements    
     data = data[-100:]
+    
+    # Generate scale
     xscale = np.arange(len(data))
+    
+    # Plot
     line.set_data([xscale,data])
-    ax.axis([0,xscale[-1],min(data),max(data)])
+    ax.axis([0,xscale[-1],0,100])
     return line,
 
 
-ani = anim.FuncAnimation(fig,draw_new_data,fargs=(data,line),interval=200)
+ani = anim.FuncAnimation(fig,draw_new_data,fargs=(data,line),interval=250)
 plt.show()
